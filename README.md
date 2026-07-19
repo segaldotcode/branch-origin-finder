@@ -61,10 +61,16 @@ Pasting a CLI result, exploring the confidence breakdown, and toggling theme/lan
 
 ## How to reuse
 
+**As an installed CLI** (once published to npm): `npx branch-origin <branch-name> --json`, or `npm install -g branch-origin` and run `branch-origin <branch-name>` directly. No clone needed.
+
+**From the repo, for development or before it is published:**
+
 1. Clone the repo and install dependencies: `pnpm install`
-2. During development, run the CLI directly with `pnpm branch-origin <branch-name> -C /path/to/repo`, or `--json` for structured output, or `--all` to check every branch at once
+2. Run the CLI directly with `pnpm branch-origin <branch-name> -C /path/to/repo`, or `--json` for structured output, or `--all` to check every branch at once
 3. To use it like an installed tool regardless of package manager, build it once with `pnpm build:cli` (outputs `dist/cli.mjs`), then run it with `npm run branch-origin -- <branch-name> --json`, `yarn branch-origin <branch-name> --json` or `bun run branch-origin <branch-name> --json`
 4. Start the web interface with `pnpm dev`, then paste a `--json` result (or click "Load example") to visualize it
+
+The web interface is a companion for CLI output, not a replacement for it: it only renders JSON you paste into it, it never runs Git itself (Vercel's serverless functions have no `git` binary, and cloning arbitrary repositories server-side is a security surface this project deliberately avoids, see the architecture notes below).
 
 ## Architecture
 
