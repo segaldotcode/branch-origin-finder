@@ -2,6 +2,10 @@
   "title": "Branch Origin Finder",
   "subtitle": "Git does not store the parent branch of a branch. Run the CLI locally to infer it from merge-base analysis, reflog and upstream tracking, then paste the result below to explore it.",
   "cliHint": "run against the repository you want to analyze",
+  "cli": {
+    "copy": "Copy",
+    "copied": "Copied"
+  },
   "form": {
     "placeholder": "Paste the output of\nbranch-origin <branch-name> --json",
     "analyze": "Analyze",

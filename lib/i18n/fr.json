@@ -2,6 +2,10 @@
   "title": "Branch Origin Finder",
   "subtitle": "Git ne conserve pas la branche parente d'une branche. Lancez la CLI en local pour l'inférer par analyse du merge-base, du reflog et du suivi upstream, puis collez le résultat ci-dessous pour l'explorer.",
   "cliHint": "à lancer sur le dépôt à analyser",
+  "cli": {
+    "copy": "Copier",
+    "copied": "Copié"
+  },
   "form": {
     "placeholder": "Collez la sortie de\nbranch-origin <nom-de-branche> --json",
     "analyze": "Analyser",
