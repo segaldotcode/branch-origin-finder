@@ -8,6 +8,7 @@
     "copyFailed": "Copie impossible"
   },
   "form": {
+    "inputLabel": "JSON d'entrée",
     "placeholder": "Collez la sortie de\nbranch-origin <nom-de-branche> --json",
     "analyze": "Analyser",
     "loadExample": "Charger l'exemple",

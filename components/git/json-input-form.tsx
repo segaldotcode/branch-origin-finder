@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { CircleAlert, Loader2 } from "lucide-react";
+import { ChevronDown, CircleAlert, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { parseOriginResults, InvalidOriginResultError } from "@/lib/git/validate";
 import { EXAMPLE_RESULT_JSON } from "@/lib/git/example-result";
 import type { OriginResult } from "@/lib/git/types";
@@ -19,12 +20,14 @@ interface JsonInputFormProps {
 export function JsonInputForm({ dict, isAnalyzing, onParsed }: JsonInputFormProps) {
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(true);
 
   function analyze(json: string) {
     try {
       const results = parseOriginResults(json);
       setError(null);
       onParsed(results);
+      setIsOpen(false);
     } catch (err) {
       setError(err instanceof InvalidOriginResultError ? err.message : dict.form.genericError);
     }
@@ -35,15 +38,42 @@ export function JsonInputForm({ dict, isAnalyzing, onParsed }: JsonInputFormProp
     analyze(EXAMPLE_RESULT_JSON);
   }
 
+  const preview = value.trim().split("\n")[0]?.slice(0, 60) ?? "";
+
   return (
     <div className="flex flex-col gap-3">
-      <Textarea
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder={dict.form.placeholder}
-        disabled={isAnalyzing}
-        className="min-h-40 font-mono text-xs"
-      />
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <div className="flex items-center justify-between gap-2">
+          <CollapsibleTrigger
+            render={
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                data-cuelume-press
+                data-cuelume-release
+                className="text-muted-foreground hover:text-foreground h-auto gap-1 px-1 py-0.5 text-xs font-medium"
+              />
+            }
+          >
+            <ChevronDown className={`size-3.5 transition-transform ${isOpen ? "" : "-rotate-90"}`} />
+            {dict.form.inputLabel}
+          </CollapsibleTrigger>
+          {!isOpen && value && (
+            <span className="text-muted-foreground truncate font-mono text-xs">{preview}...</span>
+          )}
+        </div>
+
+        <CollapsibleContent>
+          <Textarea
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder={dict.form.placeholder}
+            disabled={isAnalyzing}
+            className="mt-2 min-h-40 font-mono text-xs"
+          />
+        </CollapsibleContent>
+      </Collapsible>
 
       {error && (
         <Alert variant="destructive">

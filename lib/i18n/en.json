@@ -8,6 +8,7 @@
     "copyFailed": "Could not copy"
   },
   "form": {
+    "inputLabel": "Input JSON",
     "placeholder": "Paste the output of\nbranch-origin <branch-name> --json",
     "analyze": "Analyze",
     "loadExample": "Load example",

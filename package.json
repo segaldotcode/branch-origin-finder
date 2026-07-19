@@ -2,7 +2,14 @@
   "name": "branch-origin-finder",
   "version": "0.1.1",
   "description": "CLI and web tool that infers the most likely parent branch of any Git branch using merge-base analysis, reflog and confidence scoring.",
-  "keywords": ["git", "cli", "branch", "merge-base", "reflog", "developer-tools"],
+  "keywords": [
+    "git",
+    "cli",
+    "branch",
+    "merge-base",
+    "reflog",
+    "developer-tools"
+  ],
   "license": "MIT",
   "author": "Segal G.",
   "repository": {
