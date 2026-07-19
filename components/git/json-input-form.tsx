@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CircleAlert } from "lucide-react";
+import { CircleAlert, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -12,10 +12,11 @@ import type { Dictionary } from "@/lib/i18n";
 
 interface JsonInputFormProps {
   dict: Dictionary;
+  isAnalyzing: boolean;
   onParsed: (results: OriginResult[]) => void;
 }
 
-export function JsonInputForm({ dict, onParsed }: JsonInputFormProps) {
+export function JsonInputForm({ dict, isAnalyzing, onParsed }: JsonInputFormProps) {
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -40,6 +41,7 @@ export function JsonInputForm({ dict, onParsed }: JsonInputFormProps) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={dict.form.placeholder}
+        disabled={isAnalyzing}
         className="min-h-40 font-mono text-xs"
       />
 
@@ -56,11 +58,18 @@ export function JsonInputForm({ dict, onParsed }: JsonInputFormProps) {
           data-cuelume-press
           data-cuelume-release
           onClick={() => analyze(value)}
-          disabled={value.trim().length === 0}
+          disabled={isAnalyzing || value.trim().length === 0}
         >
+          {isAnalyzing && <Loader2 className="animate-spin" />}
           {dict.form.analyze}
         </Button>
-        <Button variant="outline" data-cuelume-press data-cuelume-release onClick={loadExample}>
+        <Button
+          variant="outline"
+          data-cuelume-press
+          data-cuelume-release
+          onClick={loadExample}
+          disabled={isAnalyzing}
+        >
           {dict.form.loadExample}
         </Button>
       </div>
