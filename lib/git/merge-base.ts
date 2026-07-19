@@ -1,4 +1,5 @@
 import type { SimpleGit } from "simple-git";
+import { qualifyBranchRef } from "./ref";
 
 export interface MergeBaseInfo {
   mergeBase: string | null;
@@ -13,7 +14,11 @@ async function findMergeBase(
   candidateBranch: string,
 ): Promise<string | null> {
   try {
-    const result = await git.raw(["merge-base", candidateBranch, targetBranch]);
+    const result = await git.raw([
+      "merge-base",
+      qualifyBranchRef(candidateBranch),
+      qualifyBranchRef(targetBranch),
+    ]);
     return result.trim() || null;
   } catch {
     return null;
@@ -35,7 +40,8 @@ async function countCommits(
   toRef: string,
 ): Promise<number> {
   try {
-    const result = await git.raw(["rev-list", "--count", `${fromRef}..${toRef}`]);
+    const range = `${qualifyBranchRef(fromRef)}..${qualifyBranchRef(toRef)}`;
+    const result = await git.raw(["rev-list", "--count", range]);
     return Number.parseInt(result.trim(), 10) || 0;
   } catch {
     return 0;

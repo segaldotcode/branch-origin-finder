@@ -1,4 +1,5 @@
 import type { SimpleGit } from "simple-git";
+import { qualifyBranchRef } from "./ref";
 
 async function getReflogSubjects(git: SimpleGit, ref: string): Promise<string[]> {
   try {
@@ -32,7 +33,7 @@ export async function hasReflogCheckoutEntry(
 ): Promise<boolean> {
   const [headSubjects, branchSubjects] = await Promise.all([
     getReflogSubjects(git, "HEAD"),
-    getReflogSubjects(git, targetBranch),
+    getReflogSubjects(git, qualifyBranchRef(targetBranch)),
   ]);
 
   const headMatch = headSubjects.some((subject) =>
