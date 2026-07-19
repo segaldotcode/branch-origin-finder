@@ -80,6 +80,7 @@ export function CliCommand({ dict }: { dict: Dictionary }) {
                   data-cuelume-press
                   data-cuelume-release
                   onClick={copy}
+                  disabled={status !== "idle"}
                   aria-label={label}
                 />
               }
