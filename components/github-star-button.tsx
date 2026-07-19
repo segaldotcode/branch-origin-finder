@@ -10,7 +10,6 @@ export function GithubStarButton({ stars }: { stars: number | null }) {
   return (
     <Button
       variant="outline"
-      size="sm"
       nativeButton={false}
       data-cuelume-hover
       data-cuelume-press
