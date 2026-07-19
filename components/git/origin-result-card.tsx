@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Accordion,
@@ -16,15 +15,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { BranchGraph } from "@/components/git/branch-graph";
-import { confidenceTier, shortSha } from "@/lib/git/present";
+import { ConfidenceBar } from "@/components/git/confidence-bar";
+import { BRANCH_NAME_CLASS, CONFIDENCE_TIER_STYLES, confidenceTier, shortSha } from "@/lib/git/present";
 import type { OriginResult } from "@/lib/git/types";
 import { localizeReason, type Dictionary } from "@/lib/i18n";
-
-const TIER_BADGE_VARIANT = {
-  high: "default",
-  medium: "secondary",
-  low: "outline",
-} as const;
 
 export function OriginResultCard({ result, dict }: { result: OriginResult; dict: Dictionary }) {
   const winner = result.candidates.find((c) => c.branch === result.likelySource);
@@ -34,11 +28,12 @@ export function OriginResultCard({ result, dict }: { result: OriginResult; dict:
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <GitBranch className="text-muted-foreground size-4" />
-          {result.branch}
+          <span className={BRANCH_NAME_CLASS}>{result.branch}</span>
         </CardTitle>
         {result.likelySource && (
           <CardDescription>
-            {dict.result.likelyFrom} <span className="font-medium">{result.likelySource}</span>
+            {dict.result.likelyFrom}{" "}
+            <span className={`font-medium ${BRANCH_NAME_CLASS}`}>{result.likelySource}</span>
           </CardDescription>
         )}
       </CardHeader>
@@ -55,16 +50,11 @@ export function OriginResultCard({ result, dict }: { result: OriginResult; dict:
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{dict.result.confidence}</span>
-                <div className="flex items-center gap-2">
-                  <Badge variant={TIER_BADGE_VARIANT[confidenceTier(result.confidence)]}>
-                    {result.confidence}%
-                  </Badge>
-                  <span className="text-muted-foreground font-mono text-xs">
-                    {dict.result.commit} {shortSha(result.branchPoint)}
-                  </span>
-                </div>
+                <span className="text-muted-foreground font-mono text-xs">
+                  {dict.result.commit} {shortSha(result.branchPoint)}
+                </span>
               </div>
-              <Progress value={result.confidence} />
+              <ConfidenceBar confidence={result.confidence} />
             </div>
 
             <BranchGraph
@@ -101,8 +91,11 @@ export function OriginResultCard({ result, dict }: { result: OriginResult; dict:
                     className="flex flex-col gap-1 rounded-md border p-3 text-sm"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-medium">{candidate.branch}</span>
-                      <Badge variant={TIER_BADGE_VARIANT[confidenceTier(candidate.confidence)]}>
+                      <span className={`font-medium ${BRANCH_NAME_CLASS}`}>{candidate.branch}</span>
+                      <Badge
+                        variant="outline"
+                        className={CONFIDENCE_TIER_STYLES[confidenceTier(candidate.confidence)].badge}
+                      >
                         {candidate.confidence}%
                       </Badge>
                     </div>

@@ -1,5 +1,5 @@
 import { GitBranch, GitCommitHorizontal } from "lucide-react";
-import { shortSha } from "@/lib/git/present";
+import { BRANCH_NAME_CLASS, shortSha } from "@/lib/git/present";
 import type { Dictionary } from "@/lib/i18n";
 
 interface BranchGraphProps {
@@ -34,7 +34,7 @@ export function BranchGraph({
     <div className="flex items-center overflow-x-auto rounded-lg border p-4">
       <div className="flex shrink-0 flex-col items-center gap-1.5">
         <GitBranch className="text-muted-foreground size-4" />
-        <span className="max-w-32 truncate text-sm font-medium" title={sourceBranch}>
+        <span className={`max-w-32 truncate text-sm font-medium ${BRANCH_NAME_CLASS}`} title={sourceBranch}>
           {sourceBranch}
         </span>
       </div>
@@ -52,7 +52,7 @@ export function BranchGraph({
 
       <div className="flex shrink-0 flex-col items-center gap-1.5">
         <GitBranch className="size-4" />
-        <span className="max-w-32 truncate text-sm font-medium" title={targetBranch}>
+        <span className={`max-w-32 truncate text-sm font-medium ${BRANCH_NAME_CLASS}`} title={targetBranch}>
           {targetBranch}
         </span>
       </div>
