@@ -52,10 +52,15 @@ export function JsonInputForm({ dict, onParsed }: JsonInputFormProps) {
       )}
 
       <div className="flex gap-2">
-        <Button onClick={() => analyze(value)} disabled={value.trim().length === 0}>
+        <Button
+          data-cuelume-press
+          data-cuelume-release
+          onClick={() => analyze(value)}
+          disabled={value.trim().length === 0}
+        >
           {dict.form.analyze}
         </Button>
-        <Button variant="outline" onClick={loadExample}>
+        <Button variant="outline" data-cuelume-press data-cuelume-release onClick={loadExample}>
           {dict.form.loadExample}
         </Button>
       </div>

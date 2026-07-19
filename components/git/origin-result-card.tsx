@@ -90,13 +90,14 @@ export function OriginResultCard({ result, dict }: { result: OriginResult; dict:
         {result.candidates.length > 1 && (
           <Accordion>
             <AccordionItem value="candidates">
-              <AccordionTrigger className="text-sm">
+              <AccordionTrigger className="text-sm" data-cuelume-press data-cuelume-release>
                 {dict.result.allCandidates} ({result.candidates.length})
               </AccordionTrigger>
               <AccordionContent className="flex flex-col gap-3">
                 {result.candidates.map((candidate) => (
                   <div
                     key={candidate.branch}
+                    data-cuelume-hover="tick"
                     className="flex flex-col gap-1 rounded-md border p-3 text-sm"
                   >
                     <div className="flex items-center justify-between">

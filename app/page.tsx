@@ -1,5 +1,6 @@
 import { Analyzer } from "@/components/git/analyzer";
 import { LanguageToggle } from "@/components/language-toggle";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { getDictionary } from "@/lib/i18n";
 
 interface HomeProps {
@@ -18,7 +19,10 @@ export default async function Home({ searchParams }: HomeProps) {
           <h1 className="text-2xl font-semibold">{dict.title}</h1>
           <p className="text-muted-foreground text-sm">{dict.subtitle}</p>
         </div>
-        <LanguageToggle locale={locale} />
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <LanguageToggle locale={locale} />
+        </div>
       </header>
 
       <div className="bg-muted flex flex-col gap-1 rounded-lg border p-4 font-mono text-xs">
