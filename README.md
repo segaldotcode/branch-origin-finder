@@ -61,13 +61,13 @@ Pasting a CLI result, exploring the confidence breakdown, and toggling theme/lan
 
 ## How to reuse
 
-**As an installed CLI** (once published to npm): `npx branch-origin <branch-name> --json`, or `npm install -g branch-origin` and run `branch-origin <branch-name>` directly. No clone needed.
+**As an installed CLI:** `npx branch-origin <branch-name> --json`, or `npm install -g branch-origin` and run `branch-origin <branch-name>` directly. No clone needed. The published package ([`branch-origin` on npm](https://www.npmjs.com/package/branch-origin)) is a single self-contained file with no runtime dependencies of its own.
 
-**From the repo, for development or before it is published:**
+**From the repo, for development:**
 
 1. Clone the repo and install dependencies: `pnpm install`
 2. Run the CLI directly with `pnpm branch-origin <branch-name> -C /path/to/repo`, or `--json` for structured output, or `--all` to check every branch at once
-3. To use it like an installed tool regardless of package manager, build it once with `pnpm build:cli` (outputs `dist/cli.mjs`), then run it with `npm run branch-origin -- <branch-name> --json`, `yarn branch-origin <branch-name> --json` or `bun run branch-origin <branch-name> --json`
+3. `pnpm build:cli` builds and bundles `dist/cli.js` (used for the npm release), runnable with `node dist/cli.js <branch-name> --json` regardless of package manager
 4. Start the web interface with `pnpm dev`, then paste a `--json` result (or click "Load example") to visualize it
 
 The web interface is a companion for CLI output, not a replacement for it: it only renders JSON you paste into it, it never runs Git itself (Vercel's serverless functions have no `git` binary, and cloning arbitrary repositories server-side is a security surface this project deliberately avoids, see the architecture notes below).
@@ -79,7 +79,8 @@ The web interface is a companion for CLI output, not a replacement for it: it on
 - `lib/git/merge-base.ts`, `lib/git/reflog.ts` and `lib/git/upstream.ts` each read one independent signal from the repository (merge-base and divergence, reflog checkout entries, upstream tracking config)
 - `lib/git/ancestry.ts` ranks merge-base commits by actual position in the commit graph rather than trusting commit timestamps alone; it shells out directly with `child_process` because `simple-git`'s `raw()` does not reliably surface a non-zero exit code when a command like `merge-base --is-ancestor` produces no stderr output
 - `lib/git/confidence.ts` turns the gathered signals into a weighted score and a list of reasons, and filters out candidates the commit graph proves cannot be the source
-- `bin/branch-origin.ts` is the CLI entry point (`commander`), calling the same `lib/git` core used by the web interface; `tsup.config.ts` compiles it to `dist/cli.mjs` so it runs under plain Node regardless of package manager
+- `bin/branch-origin.ts` is the CLI entry point (`commander`), calling the same `lib/git` core used by the web interface; `tsup.config.ts` bundles it (CommonJS, dependencies included) into a single `dist/cli.js` with zero runtime dependencies of its own
+- `scripts/prepare-npm-package.mjs` writes a minimal `dist/package.json` (no dependency on the Next.js app's own dependencies) so `npm publish` from `dist/` ships a small, self-contained CLI package
 - `lib/git/types.ts` defines `ConfidenceReason` as a `code` plus structured `params`, so both the English CLI output and the localized web UI can render the same reason from the same data
 - `lib/git/validate.ts` is a small runtime type guard for JSON pasted into the web interface, so malformed input fails with a readable error instead of a crash
 - `components/git/` holds the web interface: `json-input-form.tsx` (paste + parse), `origin-result-card.tsx` (score, reasons, candidate breakdown), `branch-graph.tsx` (the divergence diagram), `confidence-bar.tsx` (color-coded, animated via `lib/hooks/use-count-up.ts`) and `cli-command.tsx` (the pnpm/npm/yarn/bun command picker with copy-to-clipboard)

@@ -1,6 +1,6 @@
 {
-  "name": "branch-origin",
-  "version": "0.1.0",
+  "name": "branch-origin-finder",
+  "version": "0.1.1",
   "description": "CLI and web tool that infers the most likely parent branch of any Git branch using merge-base analysis, reflog and confidence scoring.",
   "keywords": ["git", "cli", "branch", "merge-base", "reflog", "developer-tools"],
   "license": "MIT",
@@ -13,21 +13,17 @@
   "bugs": {
     "url": "https://github.com/segaldotcode/branch-origin-finder/issues"
   },
-  "private": false,
+  "private": true,
   "engines": {
     "node": ">=18"
   },
-  "files": [
-    "dist"
-  ],
   "bin": {
-    "branch-origin": "./dist/cli.mjs"
+    "branch-origin": "./dist/cli.js"
   },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:cli": "tsup",
-    "prepublishOnly": "pnpm build:cli",
+    "build:cli": "tsup && node scripts/prepare-npm-package.mjs",
     "start": "next start",
     "lint": "eslint",
     "branch-origin": "tsx bin/branch-origin.ts"
