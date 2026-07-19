@@ -98,7 +98,7 @@ export function JsonInputForm({ dict, isAnalyzing, onParsed }: JsonInputFormProp
           data-cuelume-press
           data-cuelume-release
           onClick={loadExample}
-          disabled={isAnalyzing}
+          disabled={isAnalyzing || value === EXAMPLE_RESULT_JSON}
         >
           {dict.form.loadExample}
         </Button>
