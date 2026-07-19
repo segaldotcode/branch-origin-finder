@@ -1,5 +1,6 @@
 import type { ConfidenceReason } from "./types";
 import type { MergeBaseInfo } from "./merge-base";
+import { describeReasonEn } from "./reason-text";
 
 export const WEIGHTS = {
   reflogMatch: 50,
@@ -58,9 +59,11 @@ export function scoreCandidates(
 
     if (signal.reflogMatch) {
       confidence += WEIGHTS.reflogMatch;
+      const params = { branch: signal.branch };
       reasons.push({
         code: "reflog_checkout_found",
-        detail: `Reflog checkout entry found from ${signal.branch}`,
+        params,
+        detail: describeReasonEn("reflog_checkout_found", params),
       });
     }
 
@@ -68,7 +71,7 @@ export function scoreCandidates(
       confidence += WEIGHTS.mostRecentMergeBase;
       reasons.push({
         code: "nearest_common_ancestor",
-        detail: "Nearest common ancestor found, more recent than other candidates",
+        detail: describeReasonEn("nearest_common_ancestor"),
       });
     }
 
@@ -78,20 +81,21 @@ export function scoreCandidates(
         .filter((s) => s.branch !== signal.branch)
         .map((s) => s.branch);
       confidence += WEIGHTS.fewestDivergentCommits;
+      const params = { branches: otherBranches };
       reasons.push({
         code: "fewer_divergent_commits",
-        detail:
-          otherBranches.length > 0
-            ? `Fewer divergent commits than ${otherBranches.join(", ")}`
-            : "Fewer divergent commits",
+        params,
+        detail: describeReasonEn("fewer_divergent_commits", params),
       });
     }
 
     if (signal.upstreamMatch) {
       confidence += WEIGHTS.upstreamMatch;
+      const params = { branch: signal.branch };
       reasons.push({
         code: "upstream_tracking_match",
-        detail: `Branch explicitly tracks ${signal.branch}`,
+        params,
+        detail: describeReasonEn("upstream_tracking_match", params),
       });
     }
 

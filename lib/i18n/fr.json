@@ -1,0 +1,35 @@
+{
+  "title": "Branch Origin Finder",
+  "subtitle": "Git ne conserve pas la branche parente d'une branche. Lancez la CLI en local pour l'inférer par analyse du merge-base, du reflog et du suivi upstream, puis collez le résultat ci-dessous pour l'explorer.",
+  "cliHint": "à lancer sur le dépôt à analyser",
+  "form": {
+    "placeholder": "Collez la sortie de\nbranch-origin <nom-de-branche> --json",
+    "analyze": "Analyser",
+    "loadExample": "Charger l'exemple",
+    "errorTitle": "Impossible de lire ce JSON",
+    "genericError": "Ce JSON n'a pas pu être analysé."
+  },
+  "result": {
+    "likelyFrom": "Probablement créée depuis",
+    "noSourceTitle": "Aucune branche source probable trouvée",
+    "noSourceDescription": "Aucune des branches candidates ne partage d'historique avec cette branche.",
+    "confidence": "Confiance",
+    "commit": "commit",
+    "allCandidates": "Toutes les candidates",
+    "ahead": "en avance",
+    "behind": "en retard",
+    "fromCommit": "depuis le commit"
+  },
+  "graph": {
+    "commit": "commit",
+    "commits": "commits",
+    "unknown": "inconnu"
+  },
+  "reasons": {
+    "reflog_checkout_found": "Entrée de reflog trouvée pour un checkout depuis {branch}",
+    "nearest_common_ancestor": "Ancêtre commun le plus proche trouvé, plus récent que les autres candidates",
+    "fewer_divergent_commits": "Moins de commits divergents que {branches}",
+    "fewer_divergent_commits_generic": "Moins de commits divergents",
+    "upstream_tracking_match": "La branche suit explicitement {branch}"
+  }
+}

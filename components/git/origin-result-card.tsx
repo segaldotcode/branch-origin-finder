@@ -18,6 +18,7 @@ import {
 import { BranchGraph } from "@/components/git/branch-graph";
 import { confidenceTier, shortSha } from "@/lib/git/present";
 import type { OriginResult } from "@/lib/git/types";
+import { localizeReason, type Dictionary } from "@/lib/i18n";
 
 const TIER_BADGE_VARIANT = {
   high: "default",
@@ -25,7 +26,7 @@ const TIER_BADGE_VARIANT = {
   low: "outline",
 } as const;
 
-export function OriginResultCard({ result }: { result: OriginResult }) {
+export function OriginResultCard({ result, dict }: { result: OriginResult; dict: Dictionary }) {
   const winner = result.candidates.find((c) => c.branch === result.likelySource);
 
   return (
@@ -37,7 +38,7 @@ export function OriginResultCard({ result }: { result: OriginResult }) {
         </CardTitle>
         {result.likelySource && (
           <CardDescription>
-            Likely branched from <span className="font-medium">{result.likelySource}</span>
+            {dict.result.likelyFrom} <span className="font-medium">{result.likelySource}</span>
           </CardDescription>
         )}
       </CardHeader>
@@ -46,22 +47,20 @@ export function OriginResultCard({ result }: { result: OriginResult }) {
         {!result.likelySource || !winner ? (
           <Alert>
             <CircleAlert />
-            <AlertTitle>No likely source branch found</AlertTitle>
-            <AlertDescription>
-              None of the candidate branches share history with this branch.
-            </AlertDescription>
+            <AlertTitle>{dict.result.noSourceTitle}</AlertTitle>
+            <AlertDescription>{dict.result.noSourceDescription}</AlertDescription>
           </Alert>
         ) : (
           <>
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Confidence</span>
+                <span className="text-sm font-medium">{dict.result.confidence}</span>
                 <div className="flex items-center gap-2">
                   <Badge variant={TIER_BADGE_VARIANT[confidenceTier(result.confidence)]}>
                     {result.confidence}%
                   </Badge>
                   <span className="text-muted-foreground font-mono text-xs">
-                    commit {shortSha(result.branchPoint)}
+                    {dict.result.commit} {shortSha(result.branchPoint)}
                   </span>
                 </div>
               </div>
@@ -74,13 +73,14 @@ export function OriginResultCard({ result }: { result: OriginResult }) {
               aheadCount={winner.aheadCount}
               behindCount={winner.behindCount}
               branchPoint={result.branchPoint}
+              dict={dict}
             />
 
             <ul className="flex flex-col gap-1.5">
               {result.reasons.map((reason) => (
                 <li key={reason.code} className="flex items-start gap-2 text-sm">
                   <CircleCheck className="text-primary mt-0.5 size-4 shrink-0" />
-                  {reason.detail}
+                  {localizeReason(reason, dict)}
                 </li>
               ))}
             </ul>
@@ -91,7 +91,7 @@ export function OriginResultCard({ result }: { result: OriginResult }) {
           <Accordion>
             <AccordionItem value="candidates">
               <AccordionTrigger className="text-sm">
-                All candidates ({result.candidates.length})
+                {dict.result.allCandidates} ({result.candidates.length})
               </AccordionTrigger>
               <AccordionContent className="flex flex-col gap-3">
                 {result.candidates.map((candidate) => (
@@ -106,13 +106,16 @@ export function OriginResultCard({ result }: { result: OriginResult }) {
                       </Badge>
                     </div>
                     <span className="text-muted-foreground">
-                      {candidate.aheadCount} ahead, {candidate.behindCount} behind
-                      {candidate.mergeBase ? ` from commit ${shortSha(candidate.mergeBase)}` : ""}
+                      {candidate.aheadCount} {dict.result.ahead}, {candidate.behindCount}{" "}
+                      {dict.result.behind}
+                      {candidate.mergeBase
+                        ? ` ${dict.result.fromCommit} ${shortSha(candidate.mergeBase)}`
+                        : ""}
                     </span>
                     {candidate.reasons.length > 0 && (
                       <ul className="text-muted-foreground mt-1 flex flex-col gap-0.5">
                         {candidate.reasons.map((reason) => (
-                          <li key={reason.code}>- {reason.detail}</li>
+                          <li key={reason.code}>- {localizeReason(reason, dict)}</li>
                         ))}
                       </ul>
                     )}

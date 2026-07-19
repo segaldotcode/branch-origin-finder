@@ -6,12 +6,20 @@ export const EXAMPLE_RESULT: OriginResult = {
   confidence: 92,
   branchPoint: "8af32cd1e9b7c4f6a2d0e5b1c3f7a9d2e4b6c8f0",
   reasons: [
-    { code: "reflog_checkout_found", detail: "Reflog checkout entry found from develop" },
+    {
+      code: "reflog_checkout_found",
+      params: { branch: "develop" },
+      detail: "Reflog checkout entry found from develop",
+    },
     {
       code: "nearest_common_ancestor",
       detail: "Nearest common ancestor found, more recent than other candidates",
     },
-    { code: "fewer_divergent_commits", detail: "Fewer divergent commits than main" },
+    {
+      code: "fewer_divergent_commits",
+      params: { branches: ["main"] },
+      detail: "Fewer divergent commits than main",
+    },
   ],
   candidates: [
     {
@@ -24,12 +32,20 @@ export const EXAMPLE_RESULT: OriginResult = {
       reflogMatch: true,
       upstreamMatch: false,
       reasons: [
-        { code: "reflog_checkout_found", detail: "Reflog checkout entry found from develop" },
+        {
+          code: "reflog_checkout_found",
+          params: { branch: "develop" },
+          detail: "Reflog checkout entry found from develop",
+        },
         {
           code: "nearest_common_ancestor",
           detail: "Nearest common ancestor found, more recent than other candidates",
         },
-        { code: "fewer_divergent_commits", detail: "Fewer divergent commits than main" },
+        {
+          code: "fewer_divergent_commits",
+          params: { branches: ["main"] },
+          detail: "Fewer divergent commits than main",
+        },
       ],
     },
     {

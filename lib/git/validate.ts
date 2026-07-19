@@ -22,7 +22,20 @@ function assertReason(value: unknown, context: string): ConfidenceReason {
   if (!isString(reason.code) || !isString(reason.detail)) {
     throw new InvalidOriginResultError(`${context}: reason is missing "code" or "detail"`);
   }
-  return { code: reason.code as ConfidenceReason["code"], detail: reason.detail };
+
+  const rawParams =
+    typeof reason.params === "object" && reason.params !== null
+      ? (reason.params as Record<string, unknown>)
+      : undefined;
+
+  const params = rawParams
+    ? {
+        branch: isString(rawParams.branch) ? rawParams.branch : undefined,
+        branches: Array.isArray(rawParams.branches) ? rawParams.branches.filter(isString) : undefined,
+      }
+    : undefined;
+
+  return { code: reason.code as ConfidenceReason["code"], detail: reason.detail, params };
 }
 
 function assertCandidate(value: unknown, context: string): CandidateResult {

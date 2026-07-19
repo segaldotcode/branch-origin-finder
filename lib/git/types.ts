@@ -4,9 +4,17 @@ export type ReasonCode =
   | "fewer_divergent_commits"
   | "upstream_tracking_match";
 
+export interface ReasonParams {
+  branch?: string;
+  branches?: string[];
+}
+
 export interface ConfidenceReason {
   code: ReasonCode;
+  /** English, human-readable rendering, produced by the CLI. */
   detail: string;
+  /** Structured data behind `detail`, so other locales can re-render it. */
+  params?: ReasonParams;
 }
 
 export interface CandidateResult {

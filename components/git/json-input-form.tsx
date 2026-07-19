@@ -8,12 +8,14 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { parseOriginResults, InvalidOriginResultError } from "@/lib/git/validate";
 import { EXAMPLE_RESULT_JSON } from "@/lib/git/example-result";
 import type { OriginResult } from "@/lib/git/types";
+import type { Dictionary } from "@/lib/i18n";
 
 interface JsonInputFormProps {
+  dict: Dictionary;
   onParsed: (results: OriginResult[]) => void;
 }
 
-export function JsonInputForm({ onParsed }: JsonInputFormProps) {
+export function JsonInputForm({ dict, onParsed }: JsonInputFormProps) {
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -23,7 +25,7 @@ export function JsonInputForm({ onParsed }: JsonInputFormProps) {
       setError(null);
       onParsed(results);
     } catch (err) {
-      setError(err instanceof InvalidOriginResultError ? err.message : "Could not parse this JSON.");
+      setError(err instanceof InvalidOriginResultError ? err.message : dict.form.genericError);
     }
   }
 
@@ -37,24 +39,24 @@ export function JsonInputForm({ onParsed }: JsonInputFormProps) {
       <Textarea
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder={`Paste the output of\nbranch-origin <branch-name> --json`}
+        placeholder={dict.form.placeholder}
         className="min-h-40 font-mono text-xs"
       />
 
       {error && (
         <Alert variant="destructive">
           <CircleAlert />
-          <AlertTitle>Could not read this JSON</AlertTitle>
+          <AlertTitle>{dict.form.errorTitle}</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
       <div className="flex gap-2">
         <Button onClick={() => analyze(value)} disabled={value.trim().length === 0}>
-          Analyze
+          {dict.form.analyze}
         </Button>
         <Button variant="outline" onClick={loadExample}>
-          Load example
+          {dict.form.loadExample}
         </Button>
       </div>
     </div>
