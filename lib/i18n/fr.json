@@ -4,7 +4,8 @@
   "cliHint": "à lancer sur le dépôt à analyser",
   "cli": {
     "copy": "Copier",
-    "copied": "Copié"
+    "copied": "Copié",
+    "copyFailed": "Copie impossible"
   },
   "form": {
     "placeholder": "Collez la sortie de\nbranch-origin <nom-de-branche> --json",

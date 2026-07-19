@@ -4,7 +4,8 @@
   "cliHint": "run against the repository you want to analyze",
   "cli": {
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "copyFailed": "Could not copy"
   },
   "form": {
     "placeholder": "Paste the output of\nbranch-origin <branch-name> --json",

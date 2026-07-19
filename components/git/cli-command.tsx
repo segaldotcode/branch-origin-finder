@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Check, Copy, X } from "lucide-react";
+import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Dictionary } from "@/lib/i18n";
@@ -17,32 +17,58 @@ const COMMANDS: Record<PackageManager, string> = {
   bun: "bun run branch-origin <branch-name> --json",
 };
 
+type CopyStatus = "idle" | "copied" | "failed";
+
+function copyWithFallback(text: string): boolean {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  const succeeded = document.execCommand("copy");
+  document.body.removeChild(textarea);
+  return succeeded;
+}
+
 export function CliCommand({ dict }: { dict: Dictionary }) {
   const [manager, setManager] = useState<PackageManager>("pnpm");
-  const [copied, setCopied] = useState(false);
+  const [status, setStatus] = useState<CopyStatus>("idle");
 
   async function copy() {
-    await navigator.clipboard.writeText(COMMANDS[manager]);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1500);
+    let succeeded: boolean;
+    try {
+      await navigator.clipboard.writeText(COMMANDS[manager]);
+      succeeded = true;
+    } catch {
+      succeeded = copyWithFallback(COMMANDS[manager]);
+    }
+
+    setStatus(succeeded ? "copied" : "failed");
+    window.setTimeout(() => setStatus("idle"), 1500);
   }
+
+  const label =
+    status === "copied" ? dict.cli.copied : status === "failed" ? dict.cli.copyFailed : dict.cli.copy;
 
   return (
     <Tabs
       value={manager}
       onValueChange={(value) => setManager(value as PackageManager)}
-      className="gap-0 rounded-lg border"
+      className="rounded-lg border"
     >
-      <TabsList variant="line" className="border-b px-2 pt-1">
-        {PACKAGE_MANAGERS.map((pm) => (
-          <TabsTrigger key={pm} value={pm} data-cuelume-press data-cuelume-release>
-            {pm}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+      <div className="border-b px-2">
+        <TabsList variant="underline">
+          {PACKAGE_MANAGERS.map((pm) => (
+            <TabsTab key={pm} value={pm} data-cuelume-press data-cuelume-release>
+              {pm}
+            </TabsTab>
+          ))}
+        </TabsList>
+      </div>
 
       {PACKAGE_MANAGERS.map((pm) => (
-        <TabsContent key={pm} value={pm} className="flex items-center justify-between gap-2 p-4">
+        <TabsPanel key={pm} value={pm} className="flex items-center justify-between gap-2 p-4">
           <code className="overflow-x-auto font-mono text-xs whitespace-pre">{COMMANDS[pm]}</code>
           <Tooltip>
             <TooltipTrigger
@@ -54,15 +80,17 @@ export function CliCommand({ dict }: { dict: Dictionary }) {
                   data-cuelume-press
                   data-cuelume-release
                   onClick={copy}
-                  aria-label={dict.cli.copy}
+                  aria-label={label}
                 />
               }
             >
-              {copied ? <Check className="text-emerald-500" /> : <Copy />}
+              {status === "copied" && <Check className="text-emerald-500" />}
+              {status === "failed" && <X className="text-rose-500" />}
+              {status === "idle" && <Copy />}
             </TooltipTrigger>
-            <TooltipContent>{copied ? dict.cli.copied : dict.cli.copy}</TooltipContent>
+            <TooltipContent>{label}</TooltipContent>
           </Tooltip>
-        </TabsContent>
+        </TabsPanel>
       ))}
     </Tabs>
   );
