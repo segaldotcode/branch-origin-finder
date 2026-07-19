@@ -8,7 +8,7 @@ const distDir = path.join(rootDir, "dist");
 
 const rootPkg = JSON.parse(readFileSync(path.join(rootDir, "package.json"), "utf8"));
 
-// dist/cli.mjs is fully self-contained (see tsup.config.ts noExternal), so
+// dist/cli.js is fully self-contained (see tsup.config.ts noExternal), so
 // this package needs no "dependencies" at all. The root package.json's
 // dependencies belong to the Next.js web app, not to CLI consumers.
 const distPkg = {
@@ -22,7 +22,9 @@ const distPkg = {
   homepage: rootPkg.homepage,
   bugs: rootPkg.bugs,
   engines: rootPkg.engines,
-  bin: { "branch-origin": "./cli.js" },
+  // npm strips a leading "./" from bin paths and warns on publish if it's
+  // there, so the path is written without it from the start.
+  bin: { "branch-origin": "cli.js" },
 };
 
 writeFileSync(path.join(distDir, "package.json"), `${JSON.stringify(distPkg, null, 2)}\n`);

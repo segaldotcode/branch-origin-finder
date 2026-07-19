@@ -18,7 +18,7 @@
     "node": ">=18"
   },
   "bin": {
-    "branch-origin": "./dist/cli.js"
+    "branch-origin": "dist/cli.js"
   },
   "scripts": {
     "dev": "next dev",
