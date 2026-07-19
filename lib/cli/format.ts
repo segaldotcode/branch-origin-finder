@@ -1,8 +1,5 @@
 import type { OriginResult } from "../git/types";
-
-function shortSha(sha: string | null): string | null {
-  return sha ? sha.slice(0, 7) : null;
-}
+import { shortSha } from "../git/present";
 
 export function formatResultAsText(result: OriginResult): string {
   const lines: string[] = [`Branch: ${result.branch}`, ""];
