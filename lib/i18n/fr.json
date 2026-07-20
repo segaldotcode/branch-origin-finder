@@ -5,7 +5,8 @@
   "cli": {
     "copy": "Copier",
     "copied": "Copié",
-    "copyFailed": "Copie impossible"
+    "copyFailed": "Copie impossible",
+    "yarnClassicNote": "Yarn Classic (v1) n'a pas de commande dlx. Utilise la commande npx de l'onglet npm à la place."
   },
   "form": {
     "inputLabel": "JSON d'entrée",

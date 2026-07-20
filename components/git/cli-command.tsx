@@ -7,14 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Dictionary } from "@/lib/i18n";
 
-const PACKAGE_MANAGERS = ["pnpm", "npm", "yarn", "bun"] as const;
+const PACKAGE_MANAGERS = ["npm", "pnpm", "yarn", "bun"] as const;
 type PackageManager = (typeof PACKAGE_MANAGERS)[number];
 
+// Each package manager's own "run a published package once, without
+// installing it" command. Yarn Classic (v1) has no such command at all -
+// `dlx` only exists in Yarn Berry (v2+) - so that tab carries a note instead
+// of a silently broken command.
 const COMMANDS: Record<PackageManager, string> = {
-  pnpm: "pnpm branch-origin <branch-name> --json",
-  npm: "npm run branch-origin -- <branch-name> --json",
-  yarn: "yarn branch-origin <branch-name> --json",
-  bun: "bun run branch-origin <branch-name> --json",
+  npm: "npx branch-origin <branch-name> --json",
+  pnpm: "pnpm dlx branch-origin <branch-name> --json",
+  yarn: "yarn dlx branch-origin <branch-name> --json",
+  bun: "bunx branch-origin <branch-name> --json",
 };
 
 type CopyStatus = "idle" | "copied" | "failed";
@@ -32,7 +36,7 @@ function copyWithFallback(text: string): boolean {
 }
 
 export function CliCommand({ dict }: { dict: Dictionary }) {
-  const [manager, setManager] = useState<PackageManager>("pnpm");
+  const [manager, setManager] = useState<PackageManager>("npm");
   const [status, setStatus] = useState<CopyStatus>("idle");
 
   async function copy() {
@@ -68,29 +72,32 @@ export function CliCommand({ dict }: { dict: Dictionary }) {
       </div>
 
       {PACKAGE_MANAGERS.map((pm) => (
-        <TabsPanel key={pm} value={pm} className="flex items-center justify-between gap-2 p-4">
-          <code className="overflow-x-auto font-mono text-xs whitespace-pre">{COMMANDS[pm]}</code>
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="shrink-0"
-                  data-cuelume-press
-                  data-cuelume-release
-                  onClick={copy}
-                  disabled={status !== "idle"}
-                  aria-label={label}
-                />
-              }
-            >
-              {status === "copied" && <Check className="text-emerald-500" />}
-              {status === "failed" && <X className="text-rose-500" />}
-              {status === "idle" && <Copy />}
-            </TooltipTrigger>
-            <TooltipContent>{label}</TooltipContent>
-          </Tooltip>
+        <TabsPanel key={pm} value={pm} className="flex flex-col gap-2 p-4">
+          <div className="flex items-center justify-between gap-2">
+            <code className="overflow-x-auto font-mono text-xs whitespace-pre">{COMMANDS[pm]}</code>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="shrink-0"
+                    data-cuelume-press
+                    data-cuelume-release
+                    onClick={copy}
+                    disabled={status !== "idle"}
+                    aria-label={label}
+                  />
+                }
+              >
+                {status === "copied" && <Check className="text-emerald-500" />}
+                {status === "failed" && <X className="text-rose-500" />}
+                {status === "idle" && <Copy />}
+              </TooltipTrigger>
+              <TooltipContent>{label}</TooltipContent>
+            </Tooltip>
+          </div>
+          {pm === "yarn" && <p className="text-muted-foreground text-xs">{dict.cli.yarnClassicNote}</p>}
         </TabsPanel>
       ))}
     </Tabs>
