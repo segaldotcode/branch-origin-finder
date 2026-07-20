@@ -1,5 +1,6 @@
 import { Analyzer } from "@/components/git/analyzer";
 import { CliCommand } from "@/components/git/cli-command";
+import { ScoreDocsDialog } from "@/components/git/score-docs-dialog";
 import { GithubStarButton } from "@/components/github-star-button";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -25,6 +26,7 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
         <div className="flex items-center gap-2">
           <GithubStarButton stars={stars} />
+          <ScoreDocsDialog dict={dict} />
           <ThemeToggle />
           <LanguageToggle locale={locale} />
         </div>

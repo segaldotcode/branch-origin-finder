@@ -37,5 +37,30 @@
     "fewer_divergent_commits": "Fewer divergent commits than {branches}",
     "fewer_divergent_commits_generic": "Fewer divergent commits",
     "upstream_tracking_match": "Branch explicitly tracks {branch}"
+  },
+  "docs": {
+    "buttonLabel": "How scores work",
+    "title": "How the confidence score works",
+    "description": "Four independent signals, each worth a fixed number of points out of 100.",
+    "signals": [
+      {
+        "name": "Reflog checkout (50 pts)",
+        "detail": "The strongest signal: a local record that you switched from the candidate branch to this one. Local only, and it records movement, not origin - if you frequently switch back and forth between two long-lived branches, both directions can show up as evidence."
+      },
+      {
+        "name": "Merge-base recency (30 pts)",
+        "detail": "Ranks candidates by how recent their common ancestor with the branch is in the commit graph (by actual graph position, not just commit dates). The most direct parent is usually the one with the most recent shared point."
+      },
+      {
+        "name": "Fewer divergent commits (15 pts)",
+        "detail": "Awarded to the candidate with the smallest total distance (commits ahead plus behind) to the branch."
+      },
+      {
+        "name": "Upstream tracking (5 pts)",
+        "detail": "Whether the branch explicitly tracks the candidate via git config. A weak signal on its own, it usually reflects a push or pull target, not necessarily the real origin."
+      }
+    ],
+    "zeroScoreTitle": "Why a branch can score 0%",
+    "zeroScoreDetail": "If a branch has no commits of its own compared to a candidate, it cannot have branched from it (that would make it older, not younger). That candidate gets excluded rather than guessed at. A branch with no reflog evidence and no unique commits versus any candidate scores 0%: no evidence, no answer, not a bug."
   }
 }

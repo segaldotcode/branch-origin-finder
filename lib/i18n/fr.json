@@ -37,5 +37,30 @@
     "fewer_divergent_commits": "Moins de commits divergents que {branches}",
     "fewer_divergent_commits_generic": "Moins de commits divergents",
     "upstream_tracking_match": "La branche suit explicitement {branch}"
+  },
+  "docs": {
+    "buttonLabel": "Comment les scores fonctionnent",
+    "title": "Comment fonctionne le score de confiance",
+    "description": "Quatre signaux indépendants, chacun valant un nombre de points fixe sur 100.",
+    "signals": [
+      {
+        "name": "Checkout dans le reflog (50 pts)",
+        "detail": "Le signal le plus fort : une trace locale montrant que tu es passé de la branche candidate à celle-ci. Disponible seulement en local, et il enregistre un déplacement, pas une origine - si tu navigues souvent entre deux branches durables, les deux sens peuvent apparaître comme preuve."
+      },
+      {
+        "name": "Récence du merge-base (30 pts)",
+        "detail": "Classe les candidates selon la récence de leur ancêtre commun avec la branche, dans le graphe de commits (par position réelle dans le graphe, pas juste par date). Le parent le plus direct a en général le point commun le plus récent."
+      },
+      {
+        "name": "Moins de commits divergents (15 pts)",
+        "detail": "Attribué à la candidate ayant la plus petite distance totale (commits en avance plus en retard) avec la branche."
+      },
+      {
+        "name": "Suivi upstream (5 pts)",
+        "detail": "La branche suit-elle explicitement la candidate via la config git. Un signal faible à lui seul, il reflète en général une cible de push/pull, pas nécessairement l'origine réelle."
+      }
+    ],
+    "zeroScoreTitle": "Pourquoi une branche peut avoir 0%",
+    "zeroScoreDetail": "Si une branche n'a aucun commit propre par rapport à une candidate, elle ne peut pas en être issue (ça la rendrait plus ancienne, pas plus récente). Cette candidate est exclue plutôt que devinée. Une branche sans preuve de reflog et sans commit propre face à toutes les candidates obtient 0% : aucune preuve, aucune réponse, pas un bug."
   }
 }
