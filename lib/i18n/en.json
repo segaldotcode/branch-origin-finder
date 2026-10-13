@@ -20,6 +20,8 @@
     "likelyFrom": "Likely branched from",
     "noSourceTitle": "No likely source branch found",
     "noSourceDescription": "None of the candidate branches share history with this branch.",
+    "tiedTitle": "Other branches are equally likely",
+    "tiedDescription": "{branches} scored exactly the same. The commit history alone cannot tell them apart.",
     "confidence": "Confidence",
     "commit": "commit",
     "allCandidates": "All candidates",
@@ -36,7 +38,7 @@
     "reflog_checkout_found": "Reflog checkout entry found from {branch}",
     "nearest_common_ancestor": "Nearest common ancestor found, more recent than other candidates",
     "fewer_divergent_commits": "Fewer divergent commits than {branches}",
-    "fewer_divergent_commits_generic": "Fewer divergent commits",
+    "fewer_divergent_commits_generic": "Fewest divergent commits among the candidates",
     "upstream_tracking_match": "Branch explicitly tracks {branch}"
   },
   "docs": {
@@ -46,7 +48,7 @@
     "signals": [
       {
         "name": "Reflog checkout (50 pts)",
-        "detail": "The strongest signal: a local record that you switched from the candidate branch to this one. Local only, and it records movement, not origin - if you frequently switch back and forth between two long-lived branches, both directions can show up as evidence."
+        "detail": "The strongest signal: a local record that you switched from the candidate branch to this one. Branches found in the reflog are added as candidates even if they are not named main or develop. Local only, and it records movement, not origin - if you frequently switch back and forth between two long-lived branches, both directions can show up as evidence."
       },
       {
         "name": "Merge-base recency (30 pts)",

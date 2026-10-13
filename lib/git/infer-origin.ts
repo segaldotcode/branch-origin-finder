@@ -4,7 +4,7 @@ import { resolveCandidates } from "./branches";
 import { getMergeBaseInfo } from "./merge-base";
 import { hasReflogCheckoutEntry } from "./reflog";
 import { tracksUpstreamBranch } from "./upstream";
-import { findMostRecentMergeBase } from "./ancestry";
+import { findMostRecentMergeBases } from "./ancestry";
 import { scoreCandidates, isPlausibleSource, type CandidateSignals } from "./confidence";
 import type { CandidateResult, InferOptions, OriginResult } from "./types";
 
@@ -41,9 +41,9 @@ export async function findLikelyOrigin(
       mergeBaseDate: s.mergeBaseInfo.mergeBaseDate,
     }));
 
-  const mostRecentBranch = await findMostRecentMergeBase(cwd, withMergeBase);
+  const mostRecentBranches = await findMostRecentMergeBases(cwd, withMergeBase);
 
-  const scored = scoreCandidates(signals, mostRecentBranch).sort(
+  const scored = scoreCandidates(signals, mostRecentBranches).sort(
     (a, b) => b.confidence - a.confidence,
   );
 
@@ -60,6 +60,9 @@ export async function findLikelyOrigin(
   }));
 
   const winner = candidates.find((c) => c.confidence > 0) ?? null;
+  const tiedWith = winner
+    ? candidates.filter((c) => c !== winner && c.confidence === winner.confidence).map((c) => c.branch)
+    : [];
 
   return {
     branch: targetBranch,
@@ -67,6 +70,7 @@ export async function findLikelyOrigin(
     confidence: winner?.confidence ?? 0,
     branchPoint: winner?.mergeBase ?? null,
     reasons: winner?.reasons ?? [],
+    tiedWith,
     candidates,
   };
 }

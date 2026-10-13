@@ -14,9 +14,26 @@ program
   .argument("[branch-name]", "branch to analyze (defaults to the current branch)")
   .option("--all", "analyze every local branch")
   .option("--json", "output structured JSON instead of plain text")
+  .option(
+    "--candidates <branches>",
+    "comma-separated branches to consider as the source (default: integration branches plus branches found in the reflog)",
+  )
   .option("-C, --cwd <path>", "path to the git repository to analyze", process.cwd())
-  .action(async (branchName: string | undefined, opts: { all?: boolean; json?: boolean; cwd: string }) => {
+  .action(async (branchName: string | undefined, opts: { all?: boolean; json?: boolean; candidates?: string; cwd: string }) => {
     const git = openRepository(opts.cwd);
+
+    const explicitCandidates = opts.candidates
+      ?.split(",")
+      .map((name) => name.trim())
+      .filter(Boolean);
+
+    if (explicitCandidates && explicitCandidates.length > 0) {
+      const localBranches = await listLocalBranches(git);
+      const unknown = explicitCandidates.filter((name) => !localBranches.includes(name));
+      if (unknown.length > 0) {
+        throw new Error(`Unknown local branch in --candidates: ${unknown.join(", ")}`);
+      }
+    }
 
     const targets = opts.all
       ? await listLocalBranches(git)
@@ -25,7 +42,7 @@ program
     const results: OriginResult[] = [];
     for (const target of targets) {
       results.push(
-        await findLikelyOrigin(git, opts.cwd, target, { candidates: opts.all ? targets : undefined }),
+        await findLikelyOrigin(git, opts.cwd, target, { candidates: explicitCandidates?.length ? explicitCandidates : opts.all ? targets : undefined }),
       );
     }
 

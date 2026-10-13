@@ -107,6 +107,7 @@ export function parseOriginResult(value: unknown, context = "result"): OriginRes
     confidence: result.confidence,
     branchPoint: result.branchPoint,
     reasons: result.reasons.map((r, i) => assertReason(r, `${context}.reasons[${i}]`)),
+    tiedWith: Array.isArray(result.tiedWith) ? result.tiedWith.filter(isString) : [],
     candidates: result.candidates.map((c, i) => assertCandidate(c, `${context}.candidates[${i}]`)),
   };
 }

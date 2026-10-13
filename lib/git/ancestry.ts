@@ -33,13 +33,17 @@ export async function isAncestor(
  * is a descendant of another candidate's merge-base is the more direct,
  * more recent branch point. Falls back to commit date when neither commit
  * is an ancestor of the other (unrelated history).
+ *
+ * Returns every candidate sharing the most recent merge-base, not just one:
+ * branches that point at the same commit (a freshly merged main and develop,
+ * say) are equally recent, and picking one of them would be arbitrary.
  */
-export async function findMostRecentMergeBase(
+export async function findMostRecentMergeBases(
   cwd: string,
   candidates: { branch: string; mergeBase: string; mergeBaseDate: string | null }[],
-): Promise<string | null> {
+): Promise<string[]> {
   if (candidates.length === 0) {
-    return null;
+    return [];
   }
 
   let best = candidates[0];
@@ -65,5 +69,5 @@ export async function findMostRecentMergeBase(
     }
   }
 
-  return best.branch;
+  return candidates.filter((c) => c.mergeBase === best.mergeBase).map((c) => c.branch);
 }

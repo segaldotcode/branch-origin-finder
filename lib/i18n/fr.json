@@ -20,6 +20,8 @@
     "likelyFrom": "Probablement créée depuis",
     "noSourceTitle": "Aucune branche source probable trouvée",
     "noSourceDescription": "Aucune des branches candidates ne partage d'historique avec cette branche.",
+    "tiedTitle": "D'autres branches sont tout aussi probables",
+    "tiedDescription": "{branches} ont obtenu exactement le même score. L'historique des commits seul ne permet pas de les départager.",
     "confidence": "Confiance",
     "commit": "commit",
     "allCandidates": "Toutes les candidates",
@@ -36,7 +38,7 @@
     "reflog_checkout_found": "Entrée de reflog trouvée pour un checkout depuis {branch}",
     "nearest_common_ancestor": "Ancêtre commun le plus proche trouvé, plus récent que les autres candidates",
     "fewer_divergent_commits": "Moins de commits divergents que {branches}",
-    "fewer_divergent_commits_generic": "Moins de commits divergents",
+    "fewer_divergent_commits_generic": "Le moins de commits divergents parmi les candidates",
     "upstream_tracking_match": "La branche suit explicitement {branch}"
   },
   "docs": {
@@ -46,7 +48,7 @@
     "signals": [
       {
         "name": "Checkout dans le reflog (50 pts)",
-        "detail": "Le signal le plus fort : une trace locale montrant que tu es passé de la branche candidate à celle-ci. Disponible seulement en local, et il enregistre un déplacement, pas une origine - si tu navigues souvent entre deux branches durables, les deux sens peuvent apparaître comme preuve."
+        "detail": "Le signal le plus fort : une trace locale montrant que tu es passé de la branche candidate à celle-ci. Les branches trouvées dans le reflog sont ajoutées aux candidates même si elles ne s'appellent pas main ou develop. Disponible seulement en local, et il enregistre un déplacement, pas une origine - si tu navigues souvent entre deux branches durables, les deux sens peuvent apparaître comme preuve."
       },
       {
         "name": "Récence du merge-base (30 pts)",

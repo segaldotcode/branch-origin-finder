@@ -20,6 +20,9 @@ export function formatResultAsText(result: OriginResult): string {
   lines.push(
     `${label("Likely source branch")} ${result.likelySource} (${result.confidence}%)`,
     `${label("Branch point")} commit ${shortSha(result.branchPoint)}`,
+    ...(result.tiedWith.length > 0
+      ? [`${label("Also equally likely")} ${result.tiedWith.join(", ")}`]
+      : []),
     label("Reasons"),
     ...result.reasons.map((reason) => `  ${reason.detail}`),
   );

@@ -21,6 +21,7 @@ export const EXAMPLE_RESULT: OriginResult = {
       detail: "Fewer divergent commits than main",
     },
   ],
+  tiedWith: [],
   candidates: [
     {
       branch: "develop",

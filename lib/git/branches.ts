@@ -1,4 +1,5 @@
 import type { SimpleGit } from "simple-git";
+import { findReflogSourceBranches } from "./reflog";
 
 const INTEGRATION_BRANCH_NAMES = ["main", "master", "develop", "trunk"];
 const RELEASE_BRANCH_PATTERN = /^release\//;
@@ -45,10 +46,16 @@ export async function resolveCandidates(
     return explicitCandidates.filter((branch) => branch !== targetBranch);
   }
 
-  const defaultBranch = await getRemoteDefaultBranch(git);
+  const [defaultBranch, reflogSources] = await Promise.all([
+    getRemoteDefaultBranch(git),
+    findReflogSourceBranches(git, targetBranch, others),
+  ]);
   const namedCandidates = new Set(others.filter(isIntegrationBranch));
   if (defaultBranch && others.includes(defaultBranch)) {
     namedCandidates.add(defaultBranch);
+  }
+  for (const source of reflogSources) {
+    namedCandidates.add(source);
   }
 
   return namedCandidates.size > 0 ? [...namedCandidates] : others;

@@ -39,7 +39,7 @@ export function isPlausibleSource(info: MergeBaseInfo): boolean {
 
 export function scoreCandidates(
   signals: CandidateSignals[],
-  mostRecentBranch: string | null,
+  mostRecentBranches: string[],
 ): ScoredCandidate[] {
   const plausible = signals.filter((s) => isPlausibleSource(s.mergeBaseInfo));
 
@@ -67,7 +67,7 @@ export function scoreCandidates(
       });
     }
 
-    if (mostRecentBranch && signal.branch === mostRecentBranch) {
+    if (mostRecentBranches.includes(signal.branch)) {
       confidence += WEIGHTS.mostRecentMergeBase;
       reasons.push({
         code: "nearest_common_ancestor",
@@ -78,7 +78,7 @@ export function scoreCandidates(
     const divergence = totalDivergence(signal.mergeBaseInfo);
     if (smallestDivergence !== null && divergence === smallestDivergence) {
       const otherBranches = plausible
-        .filter((s) => s.branch !== signal.branch)
+        .filter((s) => totalDivergence(s.mergeBaseInfo) > divergence)
         .map((s) => s.branch);
       confidence += WEIGHTS.fewestDivergentCommits;
       const params = { branches: otherBranches };

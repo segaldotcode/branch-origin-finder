@@ -9,7 +9,7 @@ export function describeReasonEn(code: ReasonCode, params: ReasonParams = {}): s
     case "fewer_divergent_commits":
       return params.branches && params.branches.length > 0
         ? `Fewer divergent commits than ${params.branches.join(", ")}`
-        : "Fewer divergent commits";
+        : "Fewest divergent commits among the candidates";
     case "upstream_tracking_match":
       return `Branch explicitly tracks ${params.branch}`;
   }

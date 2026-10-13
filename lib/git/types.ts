@@ -35,6 +35,8 @@ export interface OriginResult {
   confidence: number;
   branchPoint: string | null;
   reasons: ConfidenceReason[];
+  /** Other candidates with exactly the same confidence as `likelySource`. */
+  tiedWith: string[];
   candidates: CandidateResult[];
 }
 

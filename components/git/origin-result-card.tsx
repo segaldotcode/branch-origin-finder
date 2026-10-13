@@ -66,6 +66,16 @@ export function OriginResultCard({ result, dict }: { result: OriginResult; dict:
               dict={dict}
             />
 
+            {result.tiedWith.length > 0 && (
+              <Alert>
+                <CircleAlert />
+                <AlertTitle>{dict.result.tiedTitle}</AlertTitle>
+                <AlertDescription>
+                  {dict.result.tiedDescription.replace("{branches}", result.tiedWith.join(", "))}
+                </AlertDescription>
+              </Alert>
+            )}
+
             <ul className="flex flex-col gap-1.5">
               {result.reasons.map((reason) => (
                 <li key={reason.code} className="flex items-start gap-2 text-sm">

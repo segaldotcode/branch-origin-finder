@@ -12,11 +12,14 @@ It is not a tutorial project. It solves a real developer tooling problem, using 
 - `--all` flag to analyze every local branch against the others in one pass
 - `--json` flag for structured output
 - `-C <path>` flag to run against a repository other than the current directory
+- `--candidates a,b` flag to choose exactly which branches are considered as the source
 - Works with npm, yarn, bun and pnpm: the CLI compiles to plain JS (`pnpm build:cli`) and exposes a `bin` entry, it does not assume any single package manager
 - Merge-base analysis, ranked by recency in the commit graph (not just by commit date, which can tie or be rewritten by a rebase)
 - Reflog inspection for local `checkout` entries and branch creation records (local only)
 - Upstream tracking via `branch.<name>.merge`
 - Candidate branches are not hardcoded to `main`/`master`: the remote's actual default branch (`origin/HEAD`) is detected and always included, whatever it is named
+- Branches the reflog says the target was created from are added as candidates whatever they are named (a `refacto-website` or `feature/x` parent is found, not just `main`/`develop`)
+- Branches that tie exactly (same commit, same score) are reported as equally likely instead of one being picked arbitrarily
 - A topology check that rules out a candidate when the target branch is provably older than it, instead of reporting a confident but nonsensical match
 - Web interface: paste a `--json` result to visualize the branch graph, confidence score and reasons, no server-side git access involved
 - The confidence bar and percentage count up together, color-coded by tier (high / medium / low)
@@ -75,9 +78,9 @@ The web interface is a companion for CLI output, not a replacement for it: it on
 ## Architecture
 
 - `lib/git/infer-origin.ts` is the entry point of the analysis: it resolves candidate branches, gathers signals for each, and scores them
-- `lib/git/branches.ts` resolves candidates: it reads `origin/HEAD` to find the real default branch whatever it is named, falls back to common integration branch names (`main`, `master`, `develop`, `release/*`), and falls back again to every other local branch if none match
+- `lib/git/branches.ts` resolves candidates: it reads `origin/HEAD` to find the real default branch whatever it is named, falls back to common integration branch names (`main`, `master`, `develop`, `release/*`), adds every branch the reflog records the target as coming from (`lib/git/reflog.ts`), and falls back again to every other local branch if none match
 - `lib/git/merge-base.ts`, `lib/git/reflog.ts` and `lib/git/upstream.ts` each read one independent signal from the repository (merge-base and divergence, reflog checkout entries, upstream tracking config)
-- `lib/git/ancestry.ts` ranks merge-base commits by actual position in the commit graph rather than trusting commit timestamps alone; it shells out directly with `child_process` because `simple-git`'s `raw()` does not reliably surface a non-zero exit code when a command like `merge-base --is-ancestor` produces no stderr output
+- `lib/git/ancestry.ts` ranks merge-base commits by actual position in the commit graph rather than trusting commit timestamps alone, and returns every branch tied on the most recent one; it shells out directly with `child_process` because `simple-git`'s `raw()` does not reliably surface a non-zero exit code when a command like `merge-base --is-ancestor` produces no stderr output
 - `lib/git/confidence.ts` turns the gathered signals into a weighted score and a list of reasons, and filters out candidates the commit graph proves cannot be the source
 - `bin/branch-origin.ts` is the CLI entry point (`commander`), calling the same `lib/git` core used by the web interface; `tsup.config.ts` bundles it (CommonJS, dependencies included) into a single `dist/cli.js` with zero runtime dependencies of its own
 - `scripts/prepare-npm-package.mjs` writes a minimal `dist/package.json` (no dependency on the Next.js app's own dependencies) so `npm publish` from `dist/` ships a small, self-contained CLI package
