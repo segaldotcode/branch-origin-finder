@@ -65,7 +65,7 @@ Pasting a CLI result, exploring the confidence breakdown, and toggling theme/lan
 
 ## How to reuse
 
-**As an installed CLI:** `npx branch-origin <branch-name> --json`, or `npm install -g branch-origin` and run `branch-origin <branch-name>` directly. No clone needed. The published package ([`branch-origin` on npm](https://www.npmjs.com/package/branch-origin)) is a single self-contained file with no runtime dependencies of its own.
+**As an installed CLI:** `npx branch-origin@latest <branch-name> --json` (the `@latest` matters: without it `npx`, `pnpm dlx` and `bunx` can keep running an older cached version), or `npm install -g branch-origin` and run `branch-origin <branch-name>` directly. No clone needed. The published package ([`branch-origin` on npm](https://www.npmjs.com/package/branch-origin)) is a single self-contained file with no runtime dependencies of its own.
 
 **From the repo, for development:**
 

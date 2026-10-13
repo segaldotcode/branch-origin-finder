@@ -13,12 +13,13 @@ type PackageManager = (typeof PACKAGE_MANAGERS)[number];
 // Each package manager's own "run a published package once, without
 // installing it" command. Yarn Classic (v1) has no such command at all -
 // `dlx` only exists in Yarn Berry (v2+) - so that tab carries a note instead
-// of a silently broken command.
+// of a silently broken command. The `@latest` tag is deliberate: without it
+// npx, pnpm dlx and bunx reuse a cached older version of the CLI.
 const COMMANDS: Record<PackageManager, string> = {
-  npm: "npx branch-origin <branch-name> --json",
-  pnpm: "pnpm dlx branch-origin <branch-name> --json",
-  yarn: "yarn dlx branch-origin <branch-name> --json",
-  bun: "bunx branch-origin <branch-name> --json",
+  npm: "npx branch-origin@latest <branch-name> --json",
+  pnpm: "pnpm dlx branch-origin@latest <branch-name> --json",
+  yarn: "yarn dlx branch-origin@latest <branch-name> --json",
+  bun: "bunx branch-origin@latest <branch-name> --json",
 };
 
 type CopyStatus = "idle" | "copied" | "failed";
