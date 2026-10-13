@@ -31,6 +31,7 @@
     "dev": "next dev",
     "build": "next build",
     "build:cli": "tsup && node scripts/prepare-npm-package.mjs",
+    "release": "pnpm build:cli && pnpm publish ./dist --access public --no-git-checks",
     "start": "next start",
     "lint": "eslint",
     "branch-origin": "tsx bin/branch-origin.ts"
