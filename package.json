@@ -1,6 +1,6 @@
 {
   "name": "branch-origin-finder",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "CLI and web tool that infers the most likely parent branch of any Git branch using merge-base analysis, reflog and confidence scoring.",
   "keywords": [
     "git",
