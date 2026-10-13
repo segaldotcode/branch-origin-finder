@@ -20,6 +20,8 @@
     "likelyFrom": "Likely branched from",
     "noSourceTitle": "No likely source branch found",
     "noSourceDescription": "None of the candidate branches share history with this branch.",
+    "olderCliTitle": "This result comes from an older version of the CLI",
+    "olderCliDescription": "It may miss source branches that older versions could not detect. Run it again with: npx --prefer-online branch-origin@latest <branch> --json",
     "tiedTitle": "Other branches are equally likely",
     "tiedDescription": "{branches} scored exactly the same. The commit history alone cannot tell them apart.",
     "confidence": "Confidence",

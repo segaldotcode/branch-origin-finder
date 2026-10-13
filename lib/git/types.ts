@@ -37,6 +37,8 @@ export interface OriginResult {
   reasons: ConfidenceReason[];
   /** Other candidates with exactly the same confidence as `likelySource`. */
   tiedWith: string[];
+  /** Set by the JSON parser when the input has no `tiedWith` field, i.e. it was produced by a CLI older than 0.2.0. */
+  fromOlderCli?: boolean;
   candidates: CandidateResult[];
 }
 

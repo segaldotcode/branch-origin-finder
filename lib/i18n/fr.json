@@ -20,6 +20,8 @@
     "likelyFrom": "Probablement créée depuis",
     "noSourceTitle": "Aucune branche source probable trouvée",
     "noSourceDescription": "Aucune des branches candidates ne partage d'historique avec cette branche.",
+    "olderCliTitle": "Ce résultat vient d'une ancienne version de la CLI",
+    "olderCliDescription": "Il peut manquer des branches sources que les anciennes versions ne détectaient pas. Relance avec : npx --prefer-online branch-origin@latest <branche> --json",
     "tiedTitle": "D'autres branches sont tout aussi probables",
     "tiedDescription": "{branches} ont obtenu exactement le même score. L'historique des commits seul ne permet pas de les départager.",
     "confidence": "Confiance",

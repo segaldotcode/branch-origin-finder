@@ -108,6 +108,7 @@ export function parseOriginResult(value: unknown, context = "result"): OriginRes
     branchPoint: result.branchPoint,
     reasons: result.reasons.map((r, i) => assertReason(r, `${context}.reasons[${i}]`)),
     tiedWith: Array.isArray(result.tiedWith) ? result.tiedWith.filter(isString) : [],
+    ...(Array.isArray(result.tiedWith) ? {} : { fromOlderCli: true }),
     candidates: result.candidates.map((c, i) => assertCandidate(c, `${context}.candidates[${i}]`)),
   };
 }

@@ -39,6 +39,14 @@ export function OriginResultCard({ result, dict }: { result: OriginResult; dict:
       </CardHeader>
 
       <CardContent className="flex flex-col gap-4">
+        {result.fromOlderCli && (
+          <Alert>
+            <CircleAlert />
+            <AlertTitle>{dict.result.olderCliTitle}</AlertTitle>
+            <AlertDescription>{dict.result.olderCliDescription}</AlertDescription>
+          </Alert>
+        )}
+
         {!result.likelySource || !winner ? (
           <Alert>
             <CircleAlert />
