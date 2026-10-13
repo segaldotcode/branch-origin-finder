@@ -3,7 +3,7 @@ import { Command } from "commander";
 import { openRepository } from "../lib/git/repository";
 import { listLocalBranches } from "../lib/git/branches";
 import { findLikelyOrigin } from "../lib/git/infer-origin";
-import { formatResultsAsText } from "../lib/cli/format";
+import { formatResultsAsShortText, formatResultsAsText } from "../lib/cli/format";
 import type { OriginResult } from "../lib/git/types";
 
 const program = new Command();
@@ -14,12 +14,13 @@ program
   .argument("[branch-name]", "branch to analyze (defaults to the current branch)")
   .option("--all", "analyze every local branch")
   .option("--json", "output structured JSON instead of plain text")
+  .option("-s, --short", "print only the source branch and its confidence on one line")
   .option(
     "--candidates <branches>",
     "comma-separated branches to consider as the source (default: integration branches plus branches found in the reflog)",
   )
   .option("-C, --cwd <path>", "path to the git repository to analyze", process.cwd())
-  .action(async (branchName: string | undefined, opts: { all?: boolean; json?: boolean; candidates?: string; cwd: string }) => {
+  .action(async (branchName: string | undefined, opts: { all?: boolean; json?: boolean; short?: boolean; candidates?: string; cwd: string }) => {
     const git = openRepository(opts.cwd);
 
     const explicitCandidates = opts.candidates
@@ -51,7 +52,7 @@ program
       return;
     }
 
-    console.log(formatResultsAsText(results));
+    console.log(opts.short ? formatResultsAsShortText(results) : formatResultsAsText(results));
   });
 
 program.parseAsync(process.argv).catch((error: unknown) => {

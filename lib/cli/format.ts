@@ -30,6 +30,25 @@ export function formatResultAsText(result: OriginResult): string {
   return lines.join("\n");
 }
 
+/**
+ * One line per result: `source (confidence%)`. Meant for quick reads and
+ * shell substitution, so a single result carries no branch prefix.
+ */
+export function formatResultsAsShortText(results: OriginResult[]): string {
+  const showBranch = results.length > 1;
+
+  return results
+    .map((result) => {
+      const answer = result.likelySource
+        ? `${result.likelySource} (${result.confidence}%)${
+            result.tiedWith.length > 0 ? ` | tied with: ${result.tiedWith.join(", ")}` : ""
+          }`
+        : "none found";
+      return showBranch ? `${result.branch} -> ${answer}` : answer;
+    })
+    .join("\n");
+}
+
 export function formatResultsAsText(results: OriginResult[]): string {
   return results.map(formatResultAsText).join("\n\n");
 }

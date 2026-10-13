@@ -11,6 +11,7 @@ It is not a tutorial project. It solves a real developer tooling problem, using 
 - CLI command `branch-origin <branch-name>` with a confidence score, defaulting to the current branch when none is given
 - `--all` flag to analyze every local branch against the others in one pass
 - `--json` flag for structured output
+- `-s, --short` flag to print only the source branch and its confidence on one line, e.g. `develop (95%)`
 - `-C <path>` flag to run against a repository other than the current directory
 - `--candidates a,b` flag to choose exactly which branches are considered as the source
 - Works with npm, yarn, bun and pnpm: the CLI compiles to plain JS (`pnpm build:cli`) and exposes a `bin` entry, it does not assume any single package manager
